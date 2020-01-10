@@ -23,7 +23,7 @@
 
 set -e -o pipefail -u
 
-nj=8
+nj=35
 decode_nj=30   # note: should not be >38 which is the number of speakers in the dev set
                # after applying --seconds-per-spk-max 180.  We decode with 4 threads, so
                # this will be too many jobs if you're using run.pl.
@@ -104,7 +104,7 @@ if [ $stage -le 10 ]; then
   # The slowest part about this decoding is the scoring, which we can't really
   # control as the bottleneck is the NIST tools.
   for dset in dev test; do
-    steps/decode.sh --nj $decode_nj --cmd "$decode_cmd"  --num-threads 1 \
+    steps/decode.sh --nj $decode_nj --cmd "$decode_cmd"  --num-threads 4 \
       exp/tri1/graph_nosp data/${dset} exp/tri1/decode_nosp_${dset}
     steps/lmrescore_const_arpa.sh  --cmd "$decode_cmd" data/lang_nosp data/lang_nosp_rescore \
        data/${dset} exp/tri1/decode_nosp_${dset} exp/tri1/decode_nosp_${dset}_rescore
@@ -122,7 +122,7 @@ fi
 if [ $stage -le 12 ]; then
   utils/mkgraph.sh data/lang_nosp exp/tri2 exp/tri2/graph_nosp
   for dset in dev test; do
-    steps/decode.sh --nj $decode_nj --cmd "$decode_cmd"  --num-threads 1 \
+    steps/decode.sh --nj $decode_nj --cmd "$decode_cmd"  --num-threads 4 \
       exp/tri2/graph_nosp data/${dset} exp/tri2/decode_nosp_${dset}
     steps/lmrescore_const_arpa.sh  --cmd "$decode_cmd" data/lang_nosp data/lang_nosp_rescore \
        data/${dset} exp/tri2/decode_nosp_${dset} exp/tri2/decode_nosp_${dset}_rescore
@@ -146,7 +146,7 @@ if [ $stage -le 14 ]; then
   utils/mkgraph.sh data/lang exp/tri2 exp/tri2/graph
 
   for dset in dev test; do
-    steps/decode.sh --nj $decode_nj --cmd "$decode_cmd"  --num-threads 1 \
+    steps/decode.sh --nj $decode_nj --cmd "$decode_cmd"  --num-threads 4 \
       exp/tri2/graph data/${dset} exp/tri2/decode_${dset}
     steps/lmrescore_const_arpa.sh --cmd "$decode_cmd" data/lang data/lang_rescore \
        data/${dset} exp/tri2/decode_${dset} exp/tri2/decode_${dset}_rescore
@@ -163,7 +163,7 @@ if [ $stage -le 15 ]; then
   utils/mkgraph.sh data/lang exp/tri3 exp/tri3/graph
 
   for dset in dev test; do
-    steps/decode_fmllr.sh --nj $decode_nj --cmd "$decode_cmd"  --num-threads 1 \
+    steps/decode_fmllr.sh --nj $decode_nj --cmd "$decode_cmd"  --num-threads 4 \
       exp/tri3/graph data/${dset} exp/tri3/decode_${dset}
     steps/lmrescore_const_arpa.sh --cmd "$decode_cmd" data/lang data/lang_rescore \
        data/${dset} exp/tri3/decode_${dset} exp/tri3/decode_${dset}_rescore

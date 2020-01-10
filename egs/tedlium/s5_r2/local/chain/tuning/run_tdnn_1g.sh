@@ -33,8 +33,8 @@ set -e -o pipefail
 # First the options that are passed through to run_ivector_common.sh
 # (some of which are also used in this script directly).
 stage=0
-nj=30
-decode_nj=30
+nj=6
+decode_nj=6
 min_seg_len=1.55
 xent_regularize=0.1
 dropout_schedule='0,0@0.20,0.5@0.50,0'
