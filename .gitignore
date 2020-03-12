@@ -77,6 +77,9 @@ GSYMS
 /egs/*/*/plp
 /egs/*/*/exp
 /egs/*/*/data
+/egs/*/*/db
+/egs/tedlium_old
+/egs/tedlium/s5_r3/local/chain/*
 
 # /tools/
 /tools/pocolm/
