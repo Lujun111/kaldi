@@ -1,0 +1,21 @@
+local/nnet3/run_ivector_common.sh: alignments in exp/tri3_cleaned_ali_train_cleaned_sp_comb appear to already exist.  Please either remove them 
+ ... or use a later --stage option.
+
+
+local/nnet3/run_ivector_common.sh: data/train_cleaned_sp_hires/feats.scp already exists.
+ ... Please either remove it, or rerun this script with stage > 2.
+
+
+local/nnet3/run_ivector_common.sh: exp/nnet3_cleaned/tri5/final.mdl already exists: 
+ ... please delete and then rerun, or use a later --stage option.
+
+
+
+local/nnet3/run_ivector_common.sh: preparing directory for speed-perturbed data
+utils/data/perturb_data_dir_speed_3way.sh: data/train_cleaned_sp/feats.scp already exists: refusing to run this (please delete data/train_cleaned_sp/feats.scp if you want this to run)
+
+
+local/chain/run_tdnn.sh 
+local/nnet3/run_ivector_common.sh: data/train_cleaned_sp_hires/feats.scp already exists.
+ ... Please either remove it, or rerun this script with stage > 2.
+

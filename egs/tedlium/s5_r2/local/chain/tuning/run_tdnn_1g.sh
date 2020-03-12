@@ -33,8 +33,8 @@ set -e -o pipefail
 # First the options that are passed through to run_ivector_common.sh
 # (some of which are also used in this script directly).
 stage=0
-nj=6
-decode_nj=6
+nj=30
+decode_nj=30
 min_seg_len=1.55
 xent_regularize=0.1
 dropout_schedule='0,0@0.20,0.5@0.50,0'
@@ -50,7 +50,7 @@ train_stage=-10
 tree_affix=  # affix for tree directory, e.g. "a" or "b", in case we change the configuration.
 tdnn_affix=1g  #affix for TDNN directory, e.g. "a" or "b", in case we change the configuration.
 common_egs_dir=  # you can set this to use previously dumped egs.
-remove_egs=true
+remove_egs=false
 
 # End configuration section.
 echo "$0 $@"  # Print the command line for logging
@@ -142,7 +142,7 @@ if [ $stage -le 17 ]; then
   echo "$0: creating neural net configs using the xconfig parser";
 
   num_targets=$(tree-info $tree_dir/tree |grep num-pdfs|awk '{print $2}')
-  learning_rate_factor=$(echo "print (0.5/$xent_regularize)" | python)
+  learning_rate_factor=$(echo "print 0.5/$xent_regularize" | python)
   affine_opts="l2-regularize=0.008 dropout-proportion=0.0 dropout-per-dim-continuous=true"
   tdnnf_opts="l2-regularize=0.008 dropout-proportion=0.0 bypass-scale=0.66"
   linear_opts="l2-regularize=0.008 orthonormal-constraint=-1.0"
@@ -208,8 +208,8 @@ if [ $stage -le 18 ]; then
     --trainer.num-chunk-per-minibatch 64 \
     --trainer.frames-per-iter 5000000 \
     --trainer.num-epochs 6 \
-    --trainer.optimization.num-jobs-initial 3 \
-    --trainer.optimization.num-jobs-final 12 \
+    --trainer.optimization.num-jobs-initial 1 \
+    --trainer.optimization.num-jobs-final 1 \
     --trainer.optimization.initial-effective-lrate 0.00025 \
     --trainer.optimization.final-effective-lrate 0.000025 \
     --trainer.max-param-change 2.0 \
@@ -217,7 +217,8 @@ if [ $stage -le 18 ]; then
     --feat-dir $train_data_dir \
     --tree-dir $tree_dir \
     --lat-dir $lat_dir \
-    --dir $dir
+    --dir $dir \
+    --stage -2
 fi
 
 
